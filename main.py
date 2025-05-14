@@ -27,6 +27,11 @@ def main():
     action_menu(graph)
 
 def action_menu(graph):
+    print("\nAvailable actions:")
+    print("print - Print graph in selected representation")
+    print("find - Check if edge exists")
+    print("sortK - Perform topological sort (Kahn's algorithm)")
+    print("exit - Exit program\n")
     while True:
         action = input("actions> ").lower()
         if action == "print":
@@ -39,10 +44,16 @@ def action_menu(graph):
                 print(f"True: edge ({from_node},{to_node}) exists in the Graph")
             else:
                 print(f"False: edge ({from_node},{to_node}) does not exist in the Graph")
+        elif action == "sortk":
+            result = graph.topological_sort_kahn()
+            if result is None:
+                print("Graph contains at least one cycle - cannot perform topological sort")
+            else:
+                print("Topological order:", " ".join(map(str, result)))
         elif action == "exit":
             break
         else:
-            print("Invalid action. Use 'print', 'find', or 'exit'")
+            print("Invalid action. Use 'print', 'find', 'sortK' or 'exit'")
 
 if __name__ == "__main__":
     main()

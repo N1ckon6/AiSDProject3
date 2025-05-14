@@ -1,5 +1,6 @@
 import sys
 import random
+from collections import deque
 
 class Graph:
     def __init__(self):
@@ -15,7 +16,7 @@ class Graph:
     
     def generate_graph(self, nodes, saturation):
         self.nodes = nodes
-        self.matrix = self.generate_dag(nodes, saturation)  # This is the critical fix
+        self.matrix = self.generate_dag(nodes, saturation)
     
     def load_graph_from_user(self):
         if not sys.stdin.isatty():
@@ -114,3 +115,40 @@ class Graph:
                     matrix[i][successor] = 1
         
         return matrix
+    
+    # Kahn's sort algorithm #
+    
+    def topological_sort_kahn(self):
+        if not self.matrix:
+            return []
+        
+        in_degree = [0] * self.nodes
+        for i in range(self.nodes):
+            for j in range(self.nodes):
+                if self.matrix[i][j] == 1:
+                    in_degree[j] += 1
+        
+        queue = deque()
+        for i in range(self.nodes):
+            if in_degree[i] == 0:
+                queue.append(i)
+        
+        topo_order = []
+        count = 0
+        
+        while queue:
+            u = queue.popleft()
+            topo_order.append(u + 1)
+            
+            for v in range(self.nodes):
+                if self.matrix[u][v] == 1:
+                    in_degree[v] -= 1
+                    if in_degree[v] == 0:
+                        queue.append(v)
+            
+            count += 1
+        
+        if count != self.nodes:
+            return None
+        else:
+            return topo_order
