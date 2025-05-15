@@ -129,10 +129,48 @@ class Graph:
 
     # ----- Traversal Stubs -----
     def bfs(self):
-        ...
+        """
+        Perform breadth-first search over the graph, covering all components.
+        Prints and returns the order of visited nodes (1-indexed).
+        """
+        visited = [False] * self.nodes
+        order = []
+        queue = deque()
+
+        for start in range(self.nodes):
+            if not visited[start]:
+                visited[start] = True
+                queue.append(start)
+                while queue:
+                    u = queue.popleft()
+                    order.append(u + 1)
+                    for v in range(self.nodes):
+                        if self.matrix[u][v] == 1 and not visited[v]:
+                            visited[v] = True
+                            queue.append(v)
+        print("inline>", " ".join(map(str, order)))
+        return order
 
     def dfs(self):
-        ...
+        """
+        Perform depth-first search over the graph, covering all components.
+        Prints and returns the order of visited nodes (1-indexed).
+        """
+        visited = [False] * self.nodes
+        order = []
+
+        def dfs_visit(u):
+            visited[u] = True
+            order.append(u + 1)
+            for v in range(self.nodes):
+                if self.matrix[u][v] == 1 and not visited[v]:
+                    dfs_visit(v)
+
+        for start in range(self.nodes):
+            if not visited[start]:
+                dfs_visit(start)
+        print("inline>", " ".join(map(str, order)))
+        return order
 
     # ----- Kahn's Topological Sort -----
     def topological_sort_kahn(self):

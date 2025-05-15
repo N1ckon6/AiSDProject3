@@ -80,9 +80,8 @@ def action_menu(graph):
                     print(f"False: edge ({from_node},{to_node}) does not exist in the Graph")
             case 'bfs':
                 inline = graph.bfs()
-                print("")
             case 'dfs':
-                print("")
+                inline = graph.dfs()
             case 'sortk':
                 result = graph.topological_sort_kahn()
                 if result is None:
