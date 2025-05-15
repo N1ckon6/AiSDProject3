@@ -28,8 +28,11 @@ def main():
 
 def action_menu(graph):
     print("\nAvailable actions:")
+    print("help - For help")
     print("print - Print graph in selected representation")
     print("find - Check if edge exists")
+    print("bfs - Breath-first search")
+    print("dfs - Depth-first search")
     print("sortK - Perform topological sort (Kahn's algorithm)")
     print("exit - Exit program\n")
     while True:
@@ -61,6 +64,8 @@ def action_menu(graph):
                 print("help - For help")
                 print("print - Print graph in selected representation")
                 print("find - Check if edge exists")
+                print("bfs - Breath-first search")
+                print("dfs - Depth-first search")
                 print("sortK - Perform topological sort (Kahn's algorithm)")
                 print("exit - Exit program\n")
             case 'print':
@@ -73,6 +78,11 @@ def action_menu(graph):
                     print(f"True: edge ({from_node},{to_node}) exists in the Graph")
                 else:
                     print(f"False: edge ({from_node},{to_node}) does not exist in the Graph")
+            case 'bfs':
+                inline = graph.bfs()
+                print("")
+            case 'dfs':
+                print("")
             case 'sortk':
                 result = graph.topological_sort_kahn()
                 if result is None:
