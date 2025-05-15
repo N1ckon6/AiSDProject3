@@ -34,6 +34,7 @@ def action_menu(graph):
     print("bfs - Breath-first search")
     print("dfs - Depth-first search")
     print("sortK - Perform topological sort (Kahn's algorithm)")
+    print("sortT - Perform topological sort (Tarjan's algorithm)")
     print("exit - Exit program\n")
     while True:
         # action = input("actions> ").lower()
@@ -67,6 +68,7 @@ def action_menu(graph):
                 print("bfs - Breath-first search")
                 print("dfs - Depth-first search")
                 print("sortK - Perform topological sort (Kahn's algorithm)")
+                print("sortT - Perform topological sort (Tarjan's algorithm)")
                 print("exit - Exit program\n")
             case 'print':
                  graph.print_graph()
@@ -83,7 +85,13 @@ def action_menu(graph):
             case 'dfs':
                 inline = graph.dfs()
             case 'sortk':
-                result = graph.topological_sort_kahn()
+                result = graph.topological_sort_Kahn()
+                if result is None:
+                    print("Graph contains at least one cycle - cannot perform topological sort")
+                else:
+                    print("Topological order:", " ".join(map(str, result)))
+            case 'sortt':
+                result = graph.topological_sort_Tarjan()
                 if result is None:
                     print("Graph contains at least one cycle - cannot perform topological sort")
                 else:

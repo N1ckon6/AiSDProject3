@@ -173,7 +173,7 @@ class Graph:
         return order
 
     # ----- Kahn's Topological Sort -----
-    def topological_sort_kahn(self):
+    def topological_sort_Kahn(self):
         if not self.matrix:
             return []
         in_degree = [0] * self.nodes
@@ -199,3 +199,28 @@ class Graph:
         if count != self.nodes:
             return None
         return topo_order
+    
+    # ----- Tarjan's Topological Sort -----
+    def topological_sort_Tarjan(self):
+        n = self.nodes
+        mark = [0] * n
+        L = []
+        def visit(u):
+            if mark[u] == 2:
+                return
+            if mark[u] == 1:
+                raise RuntimeError("cycle")
+            mark[u] = 1
+            for v in range(n):
+                if self.matrix[u][v] == 1:
+                    visit(v)
+            mark[u] = 2
+            L.append(u + 1)
+        try:
+            for u in range(n):
+                if mark[u] == 0:
+                    visit(u)
+        except RuntimeError:
+            return None
+        L.reverse()
+        return L
