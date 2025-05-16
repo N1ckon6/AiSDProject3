@@ -57,7 +57,15 @@ class Graph:
         adjacency_list = []
         for i in range(nodes):
             raw = [int(x)-1 for x in input(f"{i+1}> ").split() if x.isdigit()]
-            counts = Counter(raw)
+            # Detect invalid nodes
+            invalids = sorted({val+1 for val in raw if val < 0 or val >= nodes})
+            if invalids:
+                inv_str = ", ".join(str(n) for n in invalids)
+                print(f"Error: node(s) {inv_str} exceed number of nodes ({nodes}), ignoring these values.")
+            # Keep only valid
+            valid_raw = [val for val in raw if 0 <= val < nodes]
+            # Detect duplicates
+            counts = Counter(valid_raw)
             duplicates = [node for node, cnt in counts.items() if cnt > 1]
             if duplicates:
                 dup_str = ", ".join(str(d+1) for d in duplicates)
@@ -65,7 +73,7 @@ class Graph:
             # Preserve order, remove duplicates
             seen = set()
             clean = []
-            for succ in raw:
+            for succ in valid_raw:
                 if succ not in seen:
                     seen.add(succ)
                     clean.append(succ)
