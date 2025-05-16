@@ -73,14 +73,8 @@ def action_menu(graph):
                 print("\nCopy this code into your LaTeX document.")
             case 'exit':
                 break
-            # case _ :
-            #     print("Invalid action. Use 'help' to see available commands")
-            case 'exit':
-                break
             case _ :
                 print("Invalid action. Use 'print', 'find', 'sortK' or 'exit'")
                 
-                
-
 if __name__ == "__main__":
     main()
