@@ -1,3 +1,4 @@
+import math
 import sys
 import random
 from collections import deque
@@ -103,6 +104,8 @@ class Graph:
         for i in range(self.nodes):
             successors = [str(j+1) for j in range(self.nodes) if self.matrix[i][j] == 1]
             print(f"{i+1:4} | {' '.join(successors)}")
+
+
 
     # ----- Edge Query -----
     def find_edge(self, from_node, to_node):
@@ -252,3 +255,44 @@ class Graph:
             return None    
         L.reverse()
         return L
+    
+    def export_to_tikz(self, directed=True):
+        """
+        Export the graph to TikZ code for LaTeX visualization.
+        Args:
+            directed: If True, creates directed edges with arrows
+        Returns:
+            String with tikzpicture environment that can be used in LaTeX
+        """
+        if not self.nodes:
+            return "% Empty graph (no nodes)"
+        
+        # Node positioning in a circle
+        tikz_code = "\\begin{tikzpicture}["
+        if directed:
+            tikz_code += "->, >=stealth', shorten >=1pt, auto, "
+        tikz_code += "node distance=3cm, every node/.style={circle, draw, minimum size=8mm, font=\\small}]\n\n"
+        
+        # Calculate node positions on a circle
+        angle = 360 / self.nodes
+        radius = 3 if self.nodes <= 5 else (4 if self.nodes <= 10 else 5)
+        
+        # Add nodes
+        for i in range(self.nodes):
+            x = radius * math.cos(math.radians(i * angle))
+            y = radius * math.sin(math.radians(i * angle))
+            tikz_code += f"  \\node (n{i+1}) at ({x:.2f},{y:.2f}) {{{i+1}}};\n"
+        
+        # Add edges based on current representation
+        edges = self._get_all_edges()
+        if edges:
+            tikz_code += "\n"
+            for (u, v) in edges:
+                if directed:
+                    # For directed graph, use proper arrow tips at the end
+                    tikz_code += f"  \\draw[->] (n{u+1}) -- (n{v+1});\n"
+                else:
+                    tikz_code += f"  \\draw (n{u+1}) -- (n{v+1});\n"
+        
+        tikz_code += "\\end{tikzpicture}"
+        return tikz_code

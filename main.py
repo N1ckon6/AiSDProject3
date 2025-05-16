@@ -35,20 +35,11 @@ def action_menu(graph):
     print("dfs - Depth-first search")
     print("sortK - Perform topological sort (Kahn's algorithm)")
     print("sortT - Perform topological sort (Tarjan's algorithm)")
+    print("printTikz - Export graph to TikZ format for LaTeX")
     print("exit - Exit program\n")
     while True:
         action = input("actions> ").lower()
         match action:
-            case 'help':
-                print("\nAvailable actions:")
-                print("help - For help")
-                print("print - Print graph in selected representation")
-                print("find - Check if edge exists")
-                print("bfs - Breath-first search")
-                print("dfs - Depth-first search")
-                print("sortK - Perform topological sort (Kahn's algorithm)")
-                print("sortT - Perform topological sort (Tarjan's algorithm)")
-                print("exit - Exit program\n")
             case 'print':
                  graph.print_graph()
             case 'find':
@@ -75,6 +66,15 @@ def action_menu(graph):
                     print("Graph contains at least one cycle - cannot perform topological sort")
                 else:
                     print("Topological order:", " ".join(map(str, result)))
+            case 'printtikz':
+                tikz_code = graph.export_to_tikz()
+                print("\nTikZ code for LaTeX:\n")
+                print(tikz_code)
+                print("\nCopy this code into your LaTeX document.")
+            case 'exit':
+                break
+            # case _ :
+            #     print("Invalid action. Use 'help' to see available commands")
             case 'exit':
                 break
             case _ :
