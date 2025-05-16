@@ -103,7 +103,7 @@ def action_menu(graph):
             case 'exit':
                 break
             case _ :
-                print("Invalid action. Use 'print', 'find', 'sortK' or 'exit'")
+                print("Invalid action. Use 'help', print', 'find', 'bfs', 'dfs', 'sortK', 'sortT', 'printTikz' or 'exit'")
                 
 if __name__ == "__main__":
     main()
