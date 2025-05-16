@@ -11,20 +11,29 @@ def main():
     
     
     if sys.argv[1] == "--generate":
-        try:
-            nodes = int(input("nodes> "))
-        except ValueError:
-            print("Error: Invalid input - must be numbers")
-            return True
-        try:
-            saturation = int(input("saturation> "))
-        except ValueError:
-            print("Error: Invalid input - must be numbers")
-            return True
-        
-        if saturation < 0 or saturation > 100:
-            print("Saturation must be between 0 and 100")
-            return
+        while True:
+            user_input = input("nodes> ")
+            try:
+                nodes = int(user_input)
+            except ValueError:
+                print("Error: Invalid input - must be numbers")
+                continue
+            if nodes < 0:
+                print("Error: Invalid input - nodes must be >= 0")
+                continue
+            break
+
+        while True:
+            user_input = input("saturation> ")
+            try:
+                saturation = int(user_input)
+            except ValueError:
+                print("Error: Invalid input - must be numbers")
+                continue
+            if saturation < 0 or saturation > 100:
+                print("Error: Invalid input - saturation must be between 0 and 100")
+                continue
+            break
             
         graph.generate_graph(nodes, saturation)
     elif sys.argv[1] == "--user-provided":

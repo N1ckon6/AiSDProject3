@@ -2,6 +2,7 @@ import math
 import sys
 import random
 from collections import deque
+from collections import Counter
 
 class Graph:
     """
@@ -55,8 +56,20 @@ class Graph:
         nodes = int(input("nodes> "))
         adjacency_list = []
         for i in range(nodes):
-            successors = [int(x)-1 for x in input(f"{i+1}> ").split() if x.isdigit()]
-            adjacency_list.append(successors)
+            raw = [int(x)-1 for x in input(f"{i+1}> ").split() if x.isdigit()]
+            counts = Counter(raw)
+            duplicates = [node for node, cnt in counts.items() if cnt > 1]
+            if duplicates:
+                dup_str = ", ".join(str(d+1) for d in duplicates)
+                print(f"Warning: In {i+1}>, node(s) {dup_str} occur multiple times; duplicates will be ignored.")
+            # Preserve order, remove duplicates
+            seen = set()
+            clean = []
+            for succ in raw:
+                if succ not in seen:
+                    seen.add(succ)
+                    clean.append(succ)
+            adjacency_list.append(clean)
         return adjacency_list, nodes
 
     # ----- Converters -----
