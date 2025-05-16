@@ -127,7 +127,38 @@ class Graph:
                         edges_added += 1
         return matrix
 
-    # ----- Traversal Stubs -----
+    # ----- Helper methods for representation-dependent operations -----
+    def _get_successors(self, node):
+        """Get successors of a node based on current representation"""
+        if self.representation == 'matrix':
+            return [j for j in range(self.nodes) if self.matrix[node][j] == 1]
+        elif self.representation == 'list':
+            adj_list = self.matrix_to_adjacency_list()
+            return adj_list[node]
+        else:  # table
+            return [j for j in range(self.nodes) if self.matrix[node][j] == 1]
+
+    def _get_all_edges(self):
+        """Get all edges in the graph based on current representation"""
+        edges = []
+        if self.representation == 'matrix':
+            for i in range(self.nodes):
+                for j in range(self.nodes):
+                    if self.matrix[i][j] == 1:
+                        edges.append((i, j))
+        elif self.representation == 'list':
+            adj_list = self.matrix_to_adjacency_list()
+            for i in range(self.nodes):
+                for j in adj_list[i]:
+                    edges.append((i, j))
+        else:  # table
+            for i in range(self.nodes):
+                for j in range(self.nodes):
+                    if self.matrix[i][j] == 1:
+                        edges.append((i, j))
+        return edges
+
+    # ----- Traversal Methods -----
     def bfs(self):
         """
         Perform breadth-first search over the graph, covering all components.
@@ -144,8 +175,8 @@ class Graph:
                 while queue:
                     u = queue.popleft()
                     order.append(u + 1)
-                    for v in range(self.nodes):
-                        if self.matrix[u][v] == 1 and not visited[v]:
+                    for v in self._get_successors(u):
+                        if not visited[v]:
                             visited[v] = True
                             queue.append(v)
         print("inline>", " ".join(map(str, order)))
@@ -162,8 +193,8 @@ class Graph:
         def dfs_visit(u):
             visited[u] = True
             order.append(u + 1)
-            for v in range(self.nodes):
-                if self.matrix[u][v] == 1 and not visited[v]:
+            for v in self._get_successors(u):
+                if not visited[v]:
                     dfs_visit(v)
 
         for start in range(self.nodes):
@@ -177,25 +208,23 @@ class Graph:
         if not self.matrix:
             return []
         in_degree = [0] * self.nodes
-        for i in range(self.nodes):
-            for j in range(self.nodes):
-                if self.matrix[i][j] == 1:
-                    in_degree[j] += 1
+        edges = self._get_all_edges()
+        for (u, v) in edges:
+            in_degree[v] += 1
         queue = deque()
         for i in range(self.nodes):
             if in_degree[i] == 0:
-                queue.append(i)
+                queue.append(i)       
         topo_order = []
         count = 0
         while queue:
             u = queue.popleft()
             topo_order.append(u + 1)
-            for v in range(self.nodes):
-                if self.matrix[u][v] == 1:
-                    in_degree[v] -= 1
-                    if in_degree[v] == 0:
-                        queue.append(v)
-            count += 1
+            for v in self._get_successors(u):
+                in_degree[v] -= 1
+                if in_degree[v] == 0:
+                    queue.append(v)
+            count += 1 
         if count != self.nodes:
             return None
         return topo_order
@@ -211,16 +240,15 @@ class Graph:
             if mark[u] == 1:
                 raise RuntimeError("cycle")
             mark[u] = 1
-            for v in range(n):
-                if self.matrix[u][v] == 1:
-                    visit(v)
+            for v in self._get_successors(u):
+                visit(v)
             mark[u] = 2
-            L.append(u + 1)
+            L.append(u + 1)  
         try:
             for u in range(n):
                 if mark[u] == 0:
                     visit(u)
         except RuntimeError:
-            return None
+            return None    
         L.reverse()
         return L
