@@ -9,9 +9,18 @@ def main():
     graph = Graph()
     graph.set_representation(input("type> "))
     
+    
     if sys.argv[1] == "--generate":
-        nodes = int(input("nodes> "))
-        saturation = int(input("saturation> "))
+        try:
+            nodes = int(input("nodes> "))
+        except ValueError:
+            print("Error: Invalid input - must be numbers")
+            return True
+        try:
+            saturation = int(input("saturation> "))
+        except ValueError:
+            print("Error: Invalid input - must be numbers")
+            return True
         
         if saturation < 0 or saturation > 100:
             print("Saturation must be between 0 and 100")
