@@ -58,6 +58,17 @@ def action_menu(graph):
     while True:
         action = input("actions> ").lower()
         match action:
+            case 'help':
+                print("\nAvailable actions:")
+                print("help - For help")
+                print("print - Print graph in selected representation")
+                print("find - Check if edge exists")
+                print("bfs - Breath-first search")
+                print("dfs - Depth-first search")
+                print("sortK - Perform topological sort (Kahn's algorithm)")
+                print("sortT - Perform topological sort (Tarjan's algorithm)")
+                print("printTikz - Export graph to TikZ format for LaTeX")
+                print("exit - Exit program\n")
             case 'print':
                  graph.print_graph()
             case 'find':

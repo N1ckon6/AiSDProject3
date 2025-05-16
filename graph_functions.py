@@ -53,7 +53,17 @@ class Graph:
         return adjacency_list, nodes
 
     def get_user_input(self):
-        nodes = int(input("nodes> "))
+        while True:
+            user_input = input("nodes> ")
+            try:
+                nodes = int(user_input)
+            except ValueError:
+                print("Error: Invalid input - must be numbers")
+                continue
+            if nodes < 0:
+                print("Error: Invalid input - nodes must be >= 0")
+                continue
+            break
         adjacency_list = []
         for i in range(nodes):
             raw = [int(x)-1 for x in input(f"{i+1}> ").split() if x.isdigit()]
