@@ -179,14 +179,16 @@ class Graph:
 
     def _get_all_edges(self):
         """Get all edges in the graph based on current representation"""
-        return self.matrix_to_table_list()
         if self.representation == 'matrix':
             return [(i, j) for i in range(self.nodes) for j in range(self.nodes) if self.matrix[i][j] == 1]
         elif self.representation == 'list':
             adj_list = self.matrix_to_adjacency_list()
             return [(i, j) for i in range(self.nodes) for j in adj_list[i]]
         else:  # table
+            if not self.table:
+                self.matrix_to_table()
             return self.table
+        
     # ----- Traversal Methods -----
     def bfs(self):
         """
