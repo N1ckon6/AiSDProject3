@@ -13,6 +13,7 @@ class Graph:
         self.matrix = []
         self.nodes = 0
         self.representation = 'matrix'
+        self.table = []
 
     def set_representation(self, representation):
         """
@@ -23,6 +24,8 @@ class Graph:
             print("Invalid representation. Choose 'matrix', 'list', or 'table'.")
             rep = input("type> ").lower()
         self.representation = rep
+        if rep == 'table':
+            self.matrix_to_table()
 
     # ----- Graph Generation -----
     def generate_graph(self, nodes, saturation):
@@ -102,12 +105,9 @@ class Graph:
     def matrix_to_adjacency_list(self):
         return [[j for j in range(self.nodes) if self.matrix[i][j] == 1]
                 for i in range(self.nodes)]
-        
-    def matrix_to_table_list(self):
-        return [(i, j)
-                for i in range(self.nodes)
-                for j in range(self.nodes)
-                if self.matrix[i][j] == 1]
+    
+    def matrix_to_table(self):
+        self.table = [(i, j) for i in range(self.nodes) for j in range(self.nodes) if self.matrix[i][j] == 1]
 
     # ----- Printing -----
     def print_graph(self):
@@ -136,16 +136,12 @@ class Graph:
             print(f"{i+1}> {' '.join(successors)}")
 
     def print_adjacency_table(self):
-        # print('Node | Successors')
-        # print('-----+-----------')
-        # for i in range(self.nodes):
-        #     successors = [str(j+1) for j in range(self.nodes) if self.matrix[i][j] == 1]
-        #     print(f"{i+1:4} | {' '.join(successors)}")
-        edges = self.matrix_to_table_list()
-        for u, v in edges:
-            print(f"({u+1} → {v+1})")
-
-
+        if not self.table:
+            self.matrix_to_table()
+        print(" From | To")
+        print("------+----")
+        for frm, to in self.table:
+            print(f"  {frm+1:<4}| {to+1}")
 
     # ----- Edge Query -----
     def find_edge(self, from_node, to_node):
@@ -172,36 +168,25 @@ class Graph:
 
     # ----- Helper methods for representation-dependent operations -----
     def _get_successors(self, node):
-        """Get successors of a node based on current representation"""
         if self.representation == 'matrix':
             return [j for j in range(self.nodes) if self.matrix[node][j] == 1]
         elif self.representation == 'list':
             adj_list = self.matrix_to_adjacency_list()
             return adj_list[node]
         else:  # table
-            return [j for j in range(self.nodes) if self.matrix[node][j] == 1]
+            return [to for frm, to in self.table if frm == node]
+
 
     def _get_all_edges(self):
         """Get all edges in the graph based on current representation"""
-        # edges = []
-        # if self.representation == 'matrix':
-        #     for i in range(self.nodes):
-        #         for j in range(self.nodes):
-        #             if self.matrix[i][j] == 1:
-        #                 edges.append((i, j))
-        # elif self.representation == 'list':
-        #     adj_list = self.matrix_to_adjacency_list()
-        #     for i in range(self.nodes):
-        #         for j in adj_list[i]:
-        #             edges.append((i, j))
-        # else:  # table
-        #     for i in range(self.nodes):
-        #         for j in range(self.nodes):
-        #             if self.matrix[i][j] == 1:
-        #                 edges.append((i, j))
-        # return edges
         return self.matrix_to_table_list()
-
+        if self.representation == 'matrix':
+            return [(i, j) for i in range(self.nodes) for j in range(self.nodes) if self.matrix[i][j] == 1]
+        elif self.representation == 'list':
+            adj_list = self.matrix_to_adjacency_list()
+            return [(i, j) for i in range(self.nodes) for j in adj_list[i]]
+        else:  # table
+            return self.table
     # ----- Traversal Methods -----
     def bfs(self):
         """
